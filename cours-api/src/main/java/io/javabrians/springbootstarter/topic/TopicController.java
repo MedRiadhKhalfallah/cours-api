@@ -21,60 +21,57 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class TopicController {
-	@Autowired
-	private TopicService topicService;
-	
-	@Secured(value= {"ROLE_ADMIN"})
-	@RequestMapping("/topics")
-	public List<Topic>getAllTopics()
-	{
-		return topicService.getAllTopics();
-	}
-	@Secured(value= {"ROLE_ADMIN","ROLE_USER"})
-	@RequestMapping("/topics/{id}")
-	public Topic getTopic(@PathVariable Integer id)
-	{
-		return topicService.getTopic(id);
-	}
-	@Secured(value= {"ROLE_ADMIN"})
-	@RequestMapping(method=RequestMethod.POST,value="/topics")
-	public void addTopic(@RequestBody Topic topic)
-	{
-		 topicService.addTopic(topic);
-	}
-	@Secured(value= {"ROLE_ADMIN"})
-	@RequestMapping(method=RequestMethod.PUT,value="/topics/{id}")
-	public void updateTopic(@RequestBody Topic topic, @PathVariable Integer id)
-	{
-		 topicService.updateTopic(topic);
-	}
-	@Secured(value= {"ROLE_ADMIN"})
-	@RequestMapping(method=RequestMethod.DELETE,value="/topics/{id}")
-	public void deleteTopic( @PathVariable Integer id)
-	{
-		 topicService.deleteTopic(id);
-	}
-	@Secured(value= {"ROLE_ADMIN","ROLE_USER"})
-	@RequestMapping("/topics/recherche")
-	public List<Topic>rechercheTopics(@RequestParam(name="nt",defaultValue="") String nt)
-	{
-		return topicService.rechercheTopic(nt);
-	}
-	
-	@RequestMapping("/getLogedUser")
-	public Map<String, Object> getLogedUser(HttpServletRequest httpServletRequest)
-	{
-		HttpSession httpSession=httpServletRequest.getSession();
-		SecurityContext securityContext= (SecurityContext) httpSession.getAttribute("SPRING_SECURITY_CONTEXT");
-		String username= securityContext.getAuthentication().getName();
-		List<String> roles= new ArrayList<>();
-		for(GrantedAuthority ga:securityContext.getAuthentication().getAuthorities())
-		{
-			roles.add(ga.getAuthority());
-		}
-		Map<String, Object> params= new HashMap<>();
-		params.put("username", username);
-		params.put("roles", roles);
-		return params;
-	}
+    @Autowired
+    private TopicService topicService;
+
+    @Secured(value = {"ROLE_ADMIN"})
+    @RequestMapping("/topics")
+    public List<Topic> getAllTopics() {
+        return topicService.getAllTopics();
+    }
+
+    @Secured(value = {"ROLE_ADMIN", "ROLE_USER"})
+    @RequestMapping("/topics/{id}")
+    public Topic getTopic(@PathVariable Integer id) {
+        return topicService.getTopic(id);
+    }
+
+    @Secured(value = {"ADMIN"})
+    @RequestMapping(method = RequestMethod.POST, value = "/topics")
+    public void addTopic(@RequestBody Topic topic) {
+        topicService.addTopic(topic);
+    }
+
+    @Secured(value = {"ROLE_ADMIN"})
+    @RequestMapping(method = RequestMethod.PUT, value = "/topics/{id}")
+    public void updateTopic(@RequestBody Topic topic, @PathVariable Integer id) {
+        topicService.updateTopic(topic);
+    }
+
+    @Secured(value = {"ROLE_ADMIN"})
+    @RequestMapping(method = RequestMethod.DELETE, value = "/topics/{id}")
+    public void deleteTopic(@PathVariable Integer id) {
+        topicService.deleteTopic(id);
+    }
+
+    @Secured(value = {"ROLE_ADMIN", "ROLE_USER"})
+    @RequestMapping("/topics/recherche")
+    public List<Topic> rechercheTopics(@RequestParam(name = "nt", defaultValue = "") String nt) {
+        return topicService.rechercheTopic(nt);
+    }
+
+    @RequestMapping("/getLogedUser")
+    public Map<String, Object> getLogedUser(HttpServletRequest httpServletRequest) {
+        HttpSession httpSession = httpServletRequest.getSession();
+        SecurityContext securityContext = (SecurityContext) httpSession.getAttribute("SPRING_SECURITY_CONTEXT");
+        String username = securityContext.getAuthentication().getName();
+        List<String> roles = new ArrayList<>();
+        for (GrantedAuthority ga : securityContext.getAuthentication().getAuthorities()) {
+            roles.add(ga.getAuthority());
+        }
+        Map<String, Object> params = new HashMap<>();
+        params.put("username", username);
+        params.put("roles", roles);
+        return params;
+    }
 }
